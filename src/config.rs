@@ -16,7 +16,7 @@ pub struct Config {
 impl Config {
     pub fn from_dir(cwd: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
         let config = if let Some(path) =
-            find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"])
+            find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml", "pyproject.toml"])
         {
             log::debug!("Loading {}", path.display());
             Some(Self::from_file(&path)?)
@@ -33,6 +33,11 @@ impl Config {
 
     pub fn from_toml(data: &str) -> Result<Self, anyhow::Error> {
         let content = toml_edit::easy::from_str(data)?;
+        Ok(content)
+    }
+
+    pub fn from_pyproject_toml(data: &str) -> Result<Self, anyhow::Error> {
+        let content: Config = toml_edit::easy::from_str(data)?;
         Ok(content)
     }
 
